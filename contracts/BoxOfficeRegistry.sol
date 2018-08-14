@@ -2,24 +2,34 @@ pragma solidity ^0.4.24;
 
 contract BoxOfficeRegistry {
     
-    address public admin;
-    address public currentBoxOffice;
-    address[] public previousBoxOffices;
+    address public owner;
+    address public currentOracle;
+    address[] public previousOracles;
     
-    event BoxOfficeUpgraded(address newBoxOffice);
-
-    constructor() public {
-        admin = msg.sender;
+    event OracleUpgraded(address newOracle);
+    
+    modifier onlyOwner {
+        require(msg.sender == owner);
+        _;
     }
 
-    function upgradeBoxOffice(address newBoxOffice) public returns (bool) {
-        require(msg.sender == admin);
-        if(newBoxOffice != currentBoxOffice) {
-            previousBoxOffices.push(currentBoxOffice);
-            currentBoxOffice = newBoxOffice;
-            emit BoxOfficeUpgraded(newBoxOffice);
+    constructor(address oracle) public {
+        owner = msg.sender;
+        currentOracle = oracle;
+    }
+
+    function upgradeOracle(address newOracle) public onlyOwner returns (bool) {
+        if(newOracle != currentOracle) {
+            previousOracles.push(currentOracle);
+            currentOracle = newOracle;
+            emit OracleUpgraded(newOracle);
             return true;
         }
         return false;
     }
+    
+    function kill() public onlyOwner {
+        selfdestruct(owner);
+    }
+    
 }

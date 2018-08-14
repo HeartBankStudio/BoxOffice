@@ -1,21 +1,23 @@
-pragma solidity ^0.4.24; // experimental ABIEncoderV2
+pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import {HeartBankToken as Kiitos} from "./HeartBankToken.sol";
+import {HeartBankTokenInterface as Kiitos} from "./HeartBankTokenInterface.sol";
+import {BoxOfficeOracleInterface as Oracle} from "./BoxOfficeOracleInterface.sol";
 import {BoxOfficeMovie as Movie} from "./BoxOfficeMovie.sol";
-import {BoxOfficeOracle as Oracle} from "./BoxOfficeOracle.sol";
 
-contract BoxOffice is Oracle {
+contract BoxOffice {
     
     using SafeMath for uint;
     
     address public constant HEARTBANK = 0x0;
-    address public constant KIITOS = 0x0;
-    
     address public admin;
+    bool private emergency;
+    
+    Oracle public oracle;
+    Kiitos public kiitos;
+    
     uint public listingFee;
     uint public withdrawFee;
-    bool private emergency;
     
     Film[] public films;
     
@@ -67,8 +69,14 @@ contract BoxOffice is Oracle {
     
     event TicketsBought(
         uint indexed filmIndex, 
-        address indexed holder, 
+        address indexed buyer, 
         uint quantity
+    );
+    
+    event ExcessPayment(
+        uint indexed filmIndex,
+        address indexed buyer,
+        uint excess
     );
     
     event TicketSpent(
@@ -86,6 +94,11 @@ contract BoxOffice is Oracle {
     event FeeUpdated(
         uint listingFee,
         uint withdrawFee
+    );
+    
+    event FallbackTriggered(
+        address indexed sender,
+        uint value
     );
     
     modifier onlyAdmin {
@@ -114,17 +127,16 @@ contract BoxOffice is Oracle {
         _;
     }
     
-    modifier returnExcessPayment(uint filmIndex, uint quantity) {
+    modifier checkExcessPayment(uint filmIndex, uint quantity) {
         _;
-        if (msg.value > quantity.mul(films[filmIndex].price))
-            msg.sender.transfer(quantity.mul(films[filmIndex].price).sub(msg.value));
+        uint excess = msg.value.sub(quantity.mul(films[filmIndex].price));
+        // if (excess > 0) msg.sender.transfer(excess);
+        if (excess > 0) emit ExcessPayment(filmIndex, msg.sender, excess);
     }
     
     modifier chargeListingFee {
-        Kiitos kiitos = Kiitos(KIITOS);
         require(kiitos.balanceOf(msg.sender) >= listingFee);
-        require(kiitos.allowance(msg.sender, address(this)) >= listingFee);
-        kiitos.transferFrom(msg.sender, address(this), listingFee);
+        kiitos.transferToAdmin(msg.sender, listingFee);
         _;
     }
     
@@ -143,16 +155,20 @@ contract BoxOffice is Oracle {
         _;
     }
     
-    constructor() public {
+    constructor(address _token, address _oracle) public {
         admin = msg.sender;
         emergency = false;
-        usdPriceOfEth = 354;
+        
+        kiitos = Kiitos(_token);
+        oracle = Oracle(_oracle);
+        
         listingFee = 2;
         withdrawFee = 1;
     }
     
-    function() private payable {
-        if (msg.value > 0) msg.sender.transfer(msg.value);
+    function() public payable {
+        // if (msg.value > 0) msg.sender.transfer(msg.value);
+        emit FallbackTriggered(msg.sender, msg.value);
     }
     
     function makeFilm(
@@ -252,7 +268,7 @@ contract BoxOffice is Oracle {
         stopInEmergency
         onlyDuringSalesPeriod(filmIndex)
         checkPaymentAmount(filmIndex, quantity)
-        returnExcessPayment(filmIndex, quantity)
+        checkExcessPayment(filmIndex, quantity)
         returns (bool)
     {
         Film storage film = films[filmIndex];
@@ -289,13 +305,14 @@ contract BoxOffice is Oracle {
         Film storage film = films[filmIndex];
         require(recipient != address(0));
         require(amount > 0);
-        require(film.fund >= amount);
+        uint total = amount.add(withdrawFee.div(100).mul(amount));
+        require(film.fund >= total);
         require(bytes(expense).length > 0);
         
         film.withdrawals[film.withdraws] = Withdrawal(recipient, amount, expense);
         film.withdraws = film.withdraws.add(1);
-        film.fund = film.fund.sub(amount);
-        film.filmmaker.transfer(uint(100).sub(withdrawFee).div(100).mul(amount));
+        film.fund = film.fund.sub(total);
+        recipient.transfer(amount);
         
         emit FundWithdrawn(filmIndex, recipient, amount, expense);
         return true;
@@ -322,7 +339,7 @@ contract BoxOffice is Oracle {
     }
      
     function getTotalReceipts() public view returns (uint) {
-        return address(this).balance.mul(getUsdPriceOfWei());
+        return convertToUsd(address(this).balance);
     }
     
     function getTotalFilms() public view returns (uint) {
@@ -332,6 +349,9 @@ contract BoxOffice is Oracle {
     function getFilmSummary(uint index) public view returns (
         address movie,
         address filmmaker,
+        uint salesEndTime,
+        uint price,
+        uint ticketSupply,
         string movieName,
         string ticketSymbol,
         string logline,
@@ -342,6 +362,9 @@ contract BoxOffice is Oracle {
         Movie movie_ = Movie(film.movie);
         movie = film.movie;
         filmmaker = film.filmmaker;
+        salesEndTime = film.salesEndTime;
+        price = film.price;
+        ticketSupply = movie_.totalSupply();
         movieName = movie_.name();
         ticketSymbol = movie_.symbol();
         logline = film.logline;
@@ -387,24 +410,24 @@ contract BoxOffice is Oracle {
     }
     
     function getTicketPrice(uint filmIndex) public view returns (uint) {
-        return films[filmIndex].price.mul(getUsdPriceOfWei());
+        return convertToUsd(films[filmIndex].price);
     }
     
     function getMarketValue(uint filmIndex) public view returns (uint) {
-        return films[filmIndex].price.mul(getTicketSupply(filmIndex)).mul(getUsdPriceOfWei());
+        return convertToUsd(films[filmIndex].price.mul(getTicketSupply(filmIndex)));
     }
     
     function getFundsCollected(uint filmIndex) public view returns (uint) {
-        return films[filmIndex].sales.mul(getUsdPriceOfWei());
+        return convertToUsd(films[filmIndex].sales);
     }
     
     function getFundsWithdrawn(uint filmIndex) public view returns (uint) {
         Film storage film = films[filmIndex];
-        return film.sales.sub(film.fund).mul(getUsdPriceOfWei());
+        return convertToUsd(film.sales.sub(film.fund));
     }
     
     function getFundBalance(uint filmIndex) public view returns (uint) {
-        return films[filmIndex].fund.mul(getUsdPriceOfWei());
+        return convertToUsd(films[filmIndex].fund);
     }
     
     function getTotalWithdraws(uint filmIndex) public view returns (uint) {
@@ -424,8 +447,18 @@ contract BoxOffice is Oracle {
         return films[filmIndex].audience[member];
     }
     
-    function toggleEmergency() public onlyAdmin {
+    function convertToUsd(uint amountInWei) public view returns (uint) {
+        return oracle.convertToUsd(amountInWei);
+    }
+    
+    function returnExcessPayment(address recipient, uint amount) public onlyAdmin returns (bool) {
+        recipient.transfer(amount);
+        return true;
+    }
+    
+    function toggleEmergency() public onlyAdmin returns (bool) {
         emergency = !emergency;
+        return true;
     }
     
     function shutDownBoxOffice() public onlyInEmergency onlyAdmin {

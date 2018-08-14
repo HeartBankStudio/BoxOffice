@@ -1,6 +1,6 @@
 var SimpleStorage = artifacts.require("./SimpleStorage.sol");
 
-contract('SimpleStorage', function(accounts) {
+contract.skip('SimpleStorage', function(accounts) {
 
   it("...should store the value 89.", function() {
     return SimpleStorage.deployed().then(function(instance) {

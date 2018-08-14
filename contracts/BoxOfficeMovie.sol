@@ -23,11 +23,11 @@ contract BoxOfficeMovie is StandardToken {
         public 
     {
         boxOffice = msg.sender;
+        name = movieName;
+        symbol = ticketSymbol;
         totalSupply_ = ticketSupply;
         balances[filmmaker] = ticketSupply;
         allowed[filmmaker][boxOffice] = ticketSupply;
-        name = movieName;
-        symbol = ticketSymbol;
     }
     
     function updateMovieName(string movieName) external onlyBoxOffice returns (bool) {
