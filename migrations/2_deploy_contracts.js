@@ -22,5 +22,6 @@ module.exports = (deployer, network, accounts) => {
     .then(() => deployer.deploy(BoxOfficeOracle, BoxOfficeOracleStorage.address))
     .then(() => deployer.deploy(BoxOffice, HeartBankToken.address, BoxOfficeOracle.address))
     .then(() => deployer.deploy(BoxOfficeRegistry, BoxOfficeOracle.address))
+    .then(() => HeartBankToken.deployed().then(instance => instance.addAdmin(BoxOffice.address)))
     .then(() => BoxOfficeOracleStorage.deployed().then(instance => instance.addAdmin(BoxOfficeOracle.address)));
 };

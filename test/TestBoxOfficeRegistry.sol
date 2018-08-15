@@ -30,7 +30,7 @@ contract TestBoxOfficeRegistry {
 
     function testKill() public {
         BoxOfficeRegistry registry = new BoxOfficeRegistry(address(0));
-        Assert.isTrue(address(registry).call(bytes4(keccak256("kill()"))), "should self-destruct and throw");
+        Assert.isTrue(address(registry).call(bytes4(keccak256("kill()"))), "should self-destruct");
     }
 
 }

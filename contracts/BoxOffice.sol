@@ -91,7 +91,7 @@ contract BoxOffice {
         string expense
     );
     
-    event FeeUpdated(
+    event FeesUpdated(
         uint listingFee,
         uint withdrawFee
     );
@@ -130,8 +130,8 @@ contract BoxOffice {
     modifier checkExcessPayment(uint filmIndex, uint quantity) {
         _;
         uint excess = msg.value.sub(quantity.mul(films[filmIndex].price));
-        // if (excess > 0) msg.sender.transfer(excess);
         if (excess > 0) emit ExcessPayment(filmIndex, msg.sender, excess);
+        // if (excess > 0) msg.sender.transfer(excess);
     }
     
     modifier chargeListingFee {
@@ -141,8 +141,8 @@ contract BoxOffice {
     }
     
     modifier chargeWithdrawFee(uint amount) {
-        _;
         HEARTBANK.transfer(withdrawFee.div(100).mul(amount));
+        _;
     }
     
     modifier stopInEmergency { 
@@ -318,7 +318,7 @@ contract BoxOffice {
         return true;
     }
     
-    function updateFee(uint _listingFee, uint _withdrawFee)
+    function updateFees(uint _listingFee, uint _withdrawFee)
         public
         stopInEmergency
         onlyAdmin
@@ -326,7 +326,7 @@ contract BoxOffice {
     {
         listingFee = _listingFee;
         withdrawFee = _withdrawFee;
-        emit FeeUpdated(listingFee, withdrawFee);
+        emit FeesUpdated(listingFee, withdrawFee);
         return true;
     }
     

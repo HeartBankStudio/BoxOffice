@@ -57,11 +57,11 @@ contract TestBoxOffice {
 
     function testWithdrawFund() public {
         Assert.isTrue(boxOffice.buyTickets.value(3 finney)(0, 2), "should purchase tickets");
-        Assert.isTrue(boxOffice.withdrawFund(0, msg.sender, 1 finney, "to pay screenwriter"), "should purchase tickets");
+        Assert.isTrue(boxOffice.withdrawFund(0, msg.sender, 1 finney, "to pay screenwriter"), "should withdraw from fund");
     }
 
-    function testUpdateFee() public {
-        Assert.isTrue(boxOffice.updateFee(3, 2), "should update fees");
+    function testUpdateFees() public {
+        Assert.isTrue(boxOffice.updateFees(3, 2), "should update fees");
     }
 
     function testReturnExcessPayment() public {
@@ -82,7 +82,7 @@ contract TestBoxOffice1 {
         uint ticketSupply = 1 ether;
         string memory movieName = "Casablanca";
         string memory ticketSymbol = "CSBC";
-        string memory logline = "Set in unoccupied Africa during the early days of World War II: An American expatriate meets a former lover, with unforeseen complications.";
+        string memory logline = "An American expatriate meets a former lover, with unforeseen complications.";
         string memory poster = "ipfshash";
         string memory trailer = "ipfshash";
         
@@ -111,7 +111,7 @@ contract TestBoxOffice2 {
         uint ticketSupply = 1 ether;
         string memory movieName = "Casablanca";
         string memory ticketSymbol = "CSBC";
-        string memory logline = "Set in unoccupied Africa during the early days of World War II: An American expatriate meets a former lover, with unforeseen complications.";
+        string memory logline = "An American expatriate meets a former lover, with unforeseen complications.";
         string memory poster = "ipfshash";
         string memory trailer = "ipfshash";
         
@@ -140,7 +140,7 @@ contract TestBoxOffice3 {
         uint ticketSupply = 1 ether;
         string memory movieName = "Casablanca";
         string memory ticketSymbol = "CSBC";
-        string memory logline = "Set in unoccupied Africa during the early days of World War II: An American expatriate meets a former lover, with unforeseen complications.";
+        string memory logline = "An American expatriate meets a former lover, with unforeseen complications.";
         string memory poster = "ipfshash";
         string memory trailer = "ipfshash";
         
@@ -169,7 +169,7 @@ contract TestBoxOffice4 {
         uint ticketSupply = 1 ether;
         string memory movieName = "Casablanca";
         string memory ticketSymbol = "CSBC";
-        string memory logline = "Set in unoccupied Africa during the early days of World War II: An American expatriate meets a former lover, with unforeseen complications.";
+        string memory logline = "An American expatriate meets a former lover, with unforeseen complications.";
         string memory poster = "ipfshash";
         string memory trailer = "ipfshash";
         
@@ -198,7 +198,7 @@ contract TestBoxOffice5 {
         uint ticketSupply = 1 ether;
         string memory movieName = "Casablanca";
         string memory ticketSymbol = "CSBC";
-        string memory logline = "Set in unoccupied Africa during the early days of World War II: An American expatriate meets a former lover, with unforeseen complications.";
+        string memory logline = "An American expatriate meets a former lover, with unforeseen complications.";
         string memory poster = "ipfshash";
         string memory trailer = "ipfshash";
         
@@ -296,7 +296,7 @@ contract TestBoxOffice7 {
 
     function testShutDownBoxOffice() public {
         Assert.isTrue(boxOffice.toggleEmergency(), "should toggle emergency state");
-        Assert.isTrue(address(boxOffice).call(bytes4(keccak256("shutDownBoxOffice()"))), "should self-destruct and throw");
+        Assert.isTrue(address(boxOffice).call(bytes4(keccak256("shutDownBoxOffice()"))), "should self-destruct");
     }
 
 }

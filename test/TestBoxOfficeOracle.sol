@@ -19,7 +19,7 @@ contract TestBoxOfficeOracle {
     }
 
     function testUsdPriceOfEth() public {
-        Assert.isAbove(oracle.usdPriceOfEth(), 1, "should return price of ether in USD");
+        Assert.equal(oracle.usdPriceOfEth(), 1, "should return price of ether in USD");
     }
 
     function testConvertToUsd() public {
@@ -37,7 +37,7 @@ contract TestBoxOfficeOracle {
     }
 
     function testKill() public {
-        Assert.isTrue(address(oracle).call(bytes4(keccak256("kill()"))), "should self-destruct and throw");
+        Assert.isTrue(address(oracle).call(bytes4(keccak256("kill()"))), "should self-destruct");
     }
 
 }
