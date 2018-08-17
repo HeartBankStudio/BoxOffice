@@ -1,0 +1,35 @@
+pragma solidity ^0.4.24;
+
+import "truffle/Assert.sol";
+import "truffle/DeployedAddresses.sol";
+import "../contracts/HeartBankToken.sol";
+import "../contracts/BoxOffice.sol";
+
+contract TestBoxOffice2 {
+
+    function testMakeFilm2() public {
+        HeartBankToken kiitos = new HeartBankToken();
+        BoxOffice boxOffice = new BoxOffice(address(kiitos), DeployedAddresses.BoxOfficeOracle());
+
+        uint salesEndTime = now + 28 days;
+        uint price = 1 finney;
+        uint ticketSupply = 1 ether;
+        string memory movieName = "Casablanca";
+        string memory ticketSymbol = "CSBC";
+        string memory logline = "An American expatriate meets a former lover, with unforeseen complications.";
+        string memory poster = "ipfshash";
+        string memory trailer = "ipfshash";
+        
+        Assert.isTrue(kiitos.addAdmin(address(boxOffice)), "should add admin");
+        Assert.isTrue(boxOffice.makeFilm(salesEndTime, price, ticketSupply, movieName, ticketSymbol, logline, poster, trailer), "should make film");
+        
+        uint salesEndTime_;
+        uint price_;
+
+        ( , , salesEndTime_, price_, , , , , , ) = boxOffice.getFilmSummary(0);
+
+        Assert.equal(salesEndTime, salesEndTime_, "should store sales ending time");
+        Assert.equal(price, price_, "should store price");
+    }
+
+}

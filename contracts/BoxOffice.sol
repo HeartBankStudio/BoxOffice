@@ -2,7 +2,6 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import {HeartBankTokenInterface as Kiitos} from "./HeartBankTokenInterface.sol";
-import {BoxOfficeOracleInterface as Oracle} from "./BoxOfficeOracleInterface.sol";
 import {BoxOfficeMovie as Movie} from "./BoxOfficeMovie.sol";
 
 contract BoxOffice {
@@ -13,9 +12,7 @@ contract BoxOffice {
     address public admin;
     bool private emergency;
     
-    Oracle public oracle;
     Kiitos public kiitos;
-    
     uint public listingFee;
     uint public withdrawFee;
     
@@ -155,13 +152,10 @@ contract BoxOffice {
         _;
     }
     
-    constructor(address _token, address _oracle) public {
+    constructor(address token) public {
+        kiitos = Kiitos(token);
         admin = msg.sender;
         emergency = false;
-        
-        kiitos = Kiitos(_token);
-        oracle = Oracle(_oracle);
-        
         listingFee = 2;
         withdrawFee = 1;
     }
@@ -312,9 +306,9 @@ contract BoxOffice {
         film.withdrawals[film.withdraws] = Withdrawal(recipient, amount, expense);
         film.withdraws = film.withdraws.add(1);
         film.fund = film.fund.sub(total);
-        recipient.transfer(amount);
-        
         emit FundWithdrawn(filmIndex, recipient, amount, expense);
+        
+        recipient.transfer(amount);
         return true;
     }
     
@@ -334,12 +328,8 @@ contract BoxOffice {
         uint totalReceipts,
         uint totalFilms
     ) {
-        totalReceipts = getTotalReceipts();
+        totalReceipts = address(this).balance;
         totalFilms = getTotalFilms();
-    }
-     
-    function getTotalReceipts() public view returns (uint) {
-        return convertToUsd(address(this).balance);
     }
     
     function getTotalFilms() public view returns (uint) {
@@ -374,8 +364,8 @@ contract BoxOffice {
     
     function getFilmStats(uint index) public view returns (
         uint price,
-        uint audience,
-        uint withdraws,
+        uint totalAudienceMembers,
+        uint totalWithdraws,
         uint ticketSupply,
         uint ticketsAvailable,
         uint ticketsSold,
@@ -384,50 +374,18 @@ contract BoxOffice {
         uint fundsWithdrawn,
         uint fundBalance
     ) {
-        price = getTicketPrice(index);
-        audience = getAudienceMembers(index).length;
-        withdraws = getTotalWithdraws(index);
-        ticketSupply = getTicketSupply(index);
-        ticketsAvailable = getTicketsAvailable(index);
-        ticketsSold = getTicketsSold(index);
-        filmMarketValue = getMarketValue(index);
-        fundsCollected = getFundsCollected(index);
-        fundsWithdrawn = getFundsWithdrawn(index);
-        fundBalance = getFundBalance(index);
-    }
-    
-    function getTicketSupply(uint filmIndex) public view returns (uint) {
-        return Movie(films[filmIndex].movie).totalSupply();
-    }
-    
-    function getTicketsAvailable(uint filmIndex) public view returns (uint) {
-        Film storage film = films[filmIndex];
-        return Movie(film.movie).balanceOf(film.filmmaker);
-    }
-    
-    function getTicketsSold(uint filmIndex) public view returns (uint) {
-        return getTicketSupply(filmIndex).sub(getTicketsAvailable(filmIndex));
-    }
-    
-    function getTicketPrice(uint filmIndex) public view returns (uint) {
-        return convertToUsd(films[filmIndex].price);
-    }
-    
-    function getMarketValue(uint filmIndex) public view returns (uint) {
-        return convertToUsd(films[filmIndex].price.mul(getTicketSupply(filmIndex)));
-    }
-    
-    function getFundsCollected(uint filmIndex) public view returns (uint) {
-        return convertToUsd(films[filmIndex].sales);
-    }
-    
-    function getFundsWithdrawn(uint filmIndex) public view returns (uint) {
-        Film storage film = films[filmIndex];
-        return convertToUsd(film.sales.sub(film.fund));
-    }
-    
-    function getFundBalance(uint filmIndex) public view returns (uint) {
-        return convertToUsd(films[filmIndex].fund);
+        Film storage film = films[index];
+        Movie movie = Movie(film.movie);
+        price = film.price;
+        totalAudienceMembers = getAudienceMembers(index).length;
+        totalWithdraws = getTotalWithdraws(index);
+        ticketSupply = movie.totalSupply();
+        ticketsAvailable = movie.balanceOf(film.filmmaker);
+        ticketsSold = ticketSupply.sub(ticketsAvailable);
+        filmMarketValue = price.mul(ticketSupply);
+        fundsCollected = film.sales;
+        fundBalance = film.fund;
+        fundsWithdrawn = fundsCollected.sub(fundBalance);
     }
     
     function getTotalWithdraws(uint filmIndex) public view returns (uint) {
@@ -447,10 +405,6 @@ contract BoxOffice {
         return films[filmIndex].audience[member];
     }
     
-    function convertToUsd(uint amountInWei) public view returns (uint) {
-        return oracle.convertToUsd(amountInWei);
-    }
-    
     function returnExcessPayment(address recipient, uint amount) public onlyAdmin returns (bool) {
         recipient.transfer(amount);
         return true;
@@ -466,3 +420,4 @@ contract BoxOffice {
     }
     
 }
+

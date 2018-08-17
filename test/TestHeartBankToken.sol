@@ -8,8 +8,8 @@ contract TestHeartBankToken {
 
     function testTokenDetails() public {
         HeartBankToken token = HeartBankToken(DeployedAddresses.HeartBankToken());
-        Assert.equal(token.name(), "HeartBank Kiitos", "should store token name");
-        Assert.equal(token.symbol(), "H3K", "should store token symbol");
+        Assert.equal(token.name(), "HeartBank", "should store token name");
+        Assert.equal(token.symbol(), "Kiitos", "should store token symbol");
         Assert.equal(token.totalSupply(), 1 ether, "should store token supply");
     }
 

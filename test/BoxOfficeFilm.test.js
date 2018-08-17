@@ -120,22 +120,22 @@ contract('BoxOffice Film', accounts => {
   });
 
   it("should get film stats", async () => {
-    const [price, audience, withdraws, ticketSupply, ticketsAvailable, ticketsSold, filmMarketValue, fundsCollected, fundsWithdrawn, fundBalance] = await boxOffice.getFilmStats(0);
-    assert.deepEqual(price, await boxOffice.convertToUsd(web3.toWei(1, "finney")));
-    assert.equal(audience, 1, "audience");
-    assert.equal(withdraws, 1, "withdraws");
+    const [price, totalAudienceMembers, totalWithdraws, ticketSupply, ticketsAvailable, ticketsSold, filmMarketValue, fundsCollected, fundsWithdrawn, fundBalance] = await boxOffice.getFilmStats(0);
+    assert.equal(price, web3.toWei(1, "finney"));
+    assert.equal(totalAudienceMembers, 1);
+    assert.equal(totalWithdraws, 1);
     assert.equal(ticketSupply, web3.toWei(1, "ether"));
     assert.equal(ticketsAvailable, web3.toWei(1, "ether") - 1);
     assert.equal(ticketsSold, 1);
-    assert.deepEqual(filmMarketValue, await boxOffice.convertToUsd(web3.toWei(1, "finney") * web3.toWei(1, "ether")));
-    assert.deepEqual(fundsCollected, await boxOffice.convertToUsd(web3.toWei(2, "finney")));
-    assert.deepEqual(fundsWithdrawn, await boxOffice.convertToUsd(web3.toWei(1, "finney")));
-    assert.deepEqual(fundBalance, await boxOffice.convertToUsd(web3.toWei(1, "finney")));
+    assert.equal(filmMarketValue, web3.toWei(1, "finney") * web3.toWei(1, "ether"));
+    assert.equal(fundsCollected, web3.toWei(2, "finney"));
+    assert.equal(fundsWithdrawn, web3.toWei(1, "finney"));
+    assert.equal(fundBalance, web3.toWei(1, "finney"));
   });
 
   it("should get box office stats", async () => {
     const [totalReceipts, totalFilms] = await boxOffice.getBoxOfficeStats();
-    assert.deepEqual(totalReceipts, await boxOffice.convertToUsd(web3.toWei(2, "finney")));
+    assert.equal(totalReceipts, web3.toWei(2, "finney"));
     assert.equal(totalFilms, 1);
   });
 
