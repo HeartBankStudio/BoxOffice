@@ -1,16 +1,25 @@
 import React, { Component } from "react";
-import web3, { Kiitos } from "../contracts";
+import web3, { Kiitos, BoxOffice, currentOracle } from "../contracts";
 
-class BoxOffice extends Component {
-    async componentDidMount() {
+class TicketBooth extends Component {
+    static async getInitialProps() {
         const kiitos = await Kiitos.deployed();
         const supply = await kiitos.totalSupply();
-        console.log(supply.toNumber());
+        const boxOffice = await BoxOffice.deployed();
+        const listingFee = await boxOffice.listingFee();
+        const oracle = await currentOracle;
+        const usdPriceOfEth = await oracle.usdPriceOfEth();
+
+        return {supply: supply.toNumber(), listingFee: listingFee.toNumber(), usdPriceOfEth: usdPriceOfEth.toNumber()};
+    }
+
+    renderFilms() {
+
     }
 
     render() {
-        return <div>Homepage!</div>;
+        return <div>{this.props.supply} {this.props.listingFee} {this.props.usdPriceOfEth}</div>;
     }
 }
 
-export default BoxOffice;
+export default TicketBooth;

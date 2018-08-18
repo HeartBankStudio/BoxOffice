@@ -16,8 +16,8 @@ contract('BoxOffice', accounts => {
     const listingFee = await boxOffice.listingFee();
     const withdrawFee = await boxOffice.withdrawFee();
 
-    assert.equal(HEARTBANK, 0x0);
-    assert.equal(admin, accounts[0]);
+    assert.equal(HEARTBANK, owner);
+    assert.equal(admin, owner);
     assert.equal(listingFee, 2);
     assert.equal(withdrawFee, 1);
   });

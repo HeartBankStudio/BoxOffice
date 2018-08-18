@@ -1,0 +1,9 @@
+{
+    "package_name": "heartbank",
+    "version": "0.1.0",
+    "description": "HeartBank BoxOffice",
+    "authors": ["Thon Ly <thonly@heartbank.ceo>"],
+    "keywords": ["heartbank", "kiitos", "box office", "erc20"],
+    "dependencies": {},
+    "license": null
+}

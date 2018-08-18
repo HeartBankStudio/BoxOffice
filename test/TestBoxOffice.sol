@@ -14,8 +14,8 @@ contract TestBoxOffice {
     }
 
     function testInitialState() public {
-        Assert.equal(boxOffice.HEARTBANK(), address(0), "should store HeartBank address");
-        // Assert.equal(boxOffice.kiitos(), DeployedAddresses.BoxOfficeOracle(), "should store Kiitos address");
+        Assert.equal(boxOffice.HEARTBANK(), msg.sender, "should store HeartBank address");
+        Assert.equal(boxOffice.kiitos(), DeployedAddresses.HeartBankToken(), "should store Kiitos address");
         Assert.equal(boxOffice.admin(), msg.sender, "should store admin");
         Assert.equal(boxOffice.listingFee(), 2, "should store listing fee");
         Assert.equal(boxOffice.withdrawFee(), 1, "should store withdraw fee");

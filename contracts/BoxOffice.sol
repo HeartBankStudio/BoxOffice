@@ -8,7 +8,7 @@ contract BoxOffice {
     
     using SafeMath for uint;
     
-    address public constant HEARTBANK = 0x0;
+    address public HEARTBANK;
     address public admin;
     bool private emergency;
     
@@ -152,7 +152,8 @@ contract BoxOffice {
         _;
     }
     
-    constructor(address token) public {
+    constructor(address heartbank, address token) public {
+        HEARTBANK = heartbank;
         kiitos = Kiitos(token);
         admin = msg.sender;
         emergency = false;
