@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import currentOracle, { Kiitos, BoxOffice } from "../scripts/contracts";
+import currentOracle, { Kiitos, BoxOffice } from "../../scripts/contracts";
 
-class TicketBooth extends Component {
+class BoxOfficeMovies extends Component {
     static async getInitialProps() {
         const kiitos = await Kiitos.deployed();
         const supply = await kiitos.totalSupply();
@@ -13,9 +13,19 @@ class TicketBooth extends Component {
         return {supply: supply.toNumber(), listingFee: listingFee.toNumber(), usdPriceOfEth: usdPriceOfEth.toNumber()};
     }
 
-    renderStageScreen() {}
+    airDropButton() {} // render kiitos token summary!
 
-    renderAudienceMembers() {}
+    shutDownBoxOfficeButton() {}
+
+    makeFilmPage() {}
+
+    updateFeesModal() {}
+
+    returnPaymentModal() {}
+
+    renderBoxOfficeStats() {}
+
+    renderBoxOfficeMovies() {}
 
     render() {
         return <div>{this.props.supply} {this.props.listingFee} {this.props.usdPriceOfEth}</div>;

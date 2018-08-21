@@ -21,8 +21,12 @@
   },
   "devDependencies": {},
   "scripts": {
+    "boxoffice": "truffle exec scripts/boxoffice.js --network development",
+    "boxoffice-rinkeby": "truffle exec scripts/boxoffice.js --network rinkeby",
+    "oracle": "truffle exec scripts/oracle.js --network development",
+    "oracle-rinkeby": "truffle exec scripts/oracle.js --network rinkeby",
     "dev": "node server.js",
-    "test": "truffle exec test.js --network development",
+    "test": "jest scripts/test.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "start": "node server.js"

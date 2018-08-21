@@ -13,7 +13,7 @@ module.exports = (deployer, network, accounts) => {
     .then(() => deployer.deploy(BoxOfficeOracleStorage))
     .then(() => deployer.deploy(BoxOfficeOracle, BoxOfficeOracleStorage.address))
     .then(() => deployer.deploy(BoxOfficeRegistry, BoxOfficeOracle.address))
-    .then(() => deployer.deploy(BoxOffice, accounts[0], HeartBankToken.address))
+    .then(() => deployer.deploy(BoxOffice, HeartBankToken.address))
     .then(() => HeartBankToken.deployed().then(instance => instance.addAdmin(BoxOffice.address)))
     .then(() => BoxOfficeOracleStorage.deployed().then(instance => instance.addAdmin(BoxOfficeOracle.address)));
 };

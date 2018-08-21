@@ -1,8 +1,9 @@
 const BoxOffice = artifacts.require("BoxOffice.sol");
+const Kiitos = artifacts.require("HeartBankToken.sol");
+const SALES_END_TIME = Date.now()/1000 + 28*60*60*24 | 0;
 
 contract('BoxOffice', accounts => {
 
-  const SALES_END_TIME = Date.now()/1000 + 28*60*60*24 | 0;
   const owner = accounts[0];
   let boxOffice;
 
@@ -11,13 +12,15 @@ contract('BoxOffice', accounts => {
   });
 
   it("should store initial states", async () => {
-    const HEARTBANK = await boxOffice.HEARTBANK();
     const admin = await boxOffice.admin();
+    const kiitos = await boxOffice.kiitos();
+    const heartbank = await boxOffice.heartbank();
     const listingFee = await boxOffice.listingFee();
     const withdrawFee = await boxOffice.withdrawFee();
 
-    assert.equal(HEARTBANK, owner);
     assert.equal(admin, owner);
+    assert.equal(kiitos, Kiitos.address);
+    assert.equal(heartbank, 0);
     assert.equal(listingFee, 2);
     assert.equal(withdrawFee, 1);
   });
@@ -33,9 +36,9 @@ contract('BoxOffice', accounts => {
     const trailer_ = "ipfs hash";
    
     boxOffice.FilmCreated((err, res) => {
-      const {filmIndex, salesEndTime, price, ticketSupply, movieName, ticketSymbol, logline, poster, trailer} = res.args;
+      const {movie, salesEndTime, price, ticketSupply, movieName, ticketSymbol, logline, poster, trailer} = res.args;
 
-      assert.equal(filmIndex, 0);
+      assert.ok(movie);
       assert.equal(salesEndTime, salesEndTime_);
       assert.equal(price, price_);
       assert.equal(ticketSupply, ticketSupply_);
@@ -45,6 +48,9 @@ contract('BoxOffice', accounts => {
       assert.equal(poster, poster_);
       assert.equal(trailer, trailer_);
     });
+
+    const gas = await boxOffice.makeFilm.estimateGas(salesEndTime_, price_, ticketSupply_, movieName_, ticketSymbol_, logline_, poster_, trailer_);
+    assert.isBelow(gas, 8003877);
 
     await boxOffice.makeFilm(salesEndTime_, price_, ticketSupply_, movieName_, ticketSymbol_, logline_, poster_, trailer_);
   });
@@ -60,9 +66,9 @@ contract('BoxOffice', accounts => {
     await boxOffice.updateFees(3, 2);
   });
 
-  it("should return excess payment", async () => {
+  it("should withdraw from box office", async () => {
     await boxOffice.send(web3.toWei(1, "finney"));
-    await boxOffice.returnExcessPayment(owner, web3.toWei(1, "finney"));
+    await boxOffice.withdrawBoxOffice(owner, web3.toWei(1, "finney"), "to return excess payment");
     assert.equal(await web3.eth.getBalance(boxOffice.address), 0);
   });
 

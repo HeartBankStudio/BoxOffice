@@ -1,5 +1,4 @@
-const HDWalletProvider = require("truffle-hdwallet-provider");
-const env = require("./config/keys");
+const { adminProvider } = require("./scripts/web3");
 
 module.exports = {
   migrations_directory: "./migrations",
@@ -10,9 +9,9 @@ module.exports = {
       network_id: "*"
     },
     rinkeby: {
-      provider: () => new HDWalletProvider(env.MNEMONIC, env.INFURA),
-      network_id: 4
-      // gas: 30000000
+      provider: adminProvider,
+      network_id: 4,
+      gas: 3000000
     }
   },
   solc: {
