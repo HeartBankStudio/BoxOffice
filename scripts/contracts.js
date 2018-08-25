@@ -1,11 +1,11 @@
-import { clientProvider as provider } from "./web3";
+import { clientWeb3 as web3, clientProvider as provider } from "./web3";
 
 const contract = require("truffle-contract");
-const kiitos = require("../build/contracts/HeartBankToken.json");
+const kiitos = require("../build/contracts/HeartBankCoin.json");
 const boxOffice = require("../build/contracts/BoxOffice.json");
 const movie = require("../build/contracts/BoxOfficeMovie.json");
-const registry = require("../build/contracts/BoxOfficeRegistry.json");
-const oracle = require("../build/contracts/BoxOfficeOracle.json");
+const registry = require("../build/contracts/OracleRegistry.json");
+const oracle = require("../build/contracts/Oracle.json");
 
 const fixTruffleContractCompatibilityIssue = contract => {
     if (typeof contract.currentProvider.sendAsync !== "function")
@@ -37,5 +37,5 @@ const currentOracle = Registry.deployed()
     .then(registry => registry.currentOracle())
     .then(oracle => Oracle.at(oracle));
 
-export default currentOracle;
-export { Kiitos, BoxOffice, Movie };
+export default web3;
+export { currentOracle, Kiitos, BoxOffice, Movie };

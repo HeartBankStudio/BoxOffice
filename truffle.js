@@ -1,17 +1,19 @@
+const { HOST, CHAIN } = require("./config");
 const { adminProvider } = require("./scripts/web3");
 
 module.exports = {
   migrations_directory: "./migrations",
   networks: {
-    development: {
-      host: "localhost",
-      port: 9545,
-      network_id: "*"
+    ganache: {
+      host: HOST,
+      port: CHAIN,
+      network_id: 100
+      // gas: 8003877,
+      // gasPrice: 2300000000
     },
     rinkeby: {
       provider: adminProvider,
-      network_id: 4,
-      gas: 3000000
+      network_id: 4
     }
   },
   solc: {

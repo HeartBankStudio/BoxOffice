@@ -1,16 +1,16 @@
 pragma solidity ^0.4.24;
 
 import "truffle/Assert.sol";
-import "../contracts/BoxOfficeOracleStorage.sol";
-import "../contracts/BoxOfficeOracle.sol";
+import "../contracts/OracleStorage.sol";
+import "../contracts/Oracle.sol";
 
-contract TestBoxOfficeOracle {
+contract TestOracle {
 
-    BoxOfficeOracle oracle;
+    Oracle oracle;
 
     function beforeEach() public {
-        BoxOfficeOracleStorage store = new BoxOfficeOracleStorage();
-        oracle = new BoxOfficeOracle(address(store));
+        OracleStorage store = new OracleStorage();
+        oracle = new Oracle(address(store));
         store.addAdmin(address(oracle));
     }
 

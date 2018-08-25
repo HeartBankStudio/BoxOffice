@@ -1,5 +1,5 @@
 const BoxOffice = artifacts.require("BoxOffice.sol");
-const Kiitos = artifacts.require("HeartBankToken.sol");
+const Kiitos = artifacts.require("HeartBankCoin.sol");
 const SALES_END_TIME = Date.now()/1000 + 28*60*60*24 | 0;
 
 contract('BoxOffice', accounts => {
@@ -66,9 +66,9 @@ contract('BoxOffice', accounts => {
     await boxOffice.updateFees(3, 2);
   });
 
-  it("should withdraw from box office", async () => {
+  it("should donate to charity", async () => {
     await boxOffice.send(web3.toWei(1, "finney"));
-    await boxOffice.withdrawBoxOffice(owner, web3.toWei(1, "finney"), "to return excess payment");
+    await boxOffice.donateToCharity(owner, web3.toWei(1, "finney"), "to return excess payment");
     assert.equal(await web3.eth.getBalance(boxOffice.address), 0);
   });
 

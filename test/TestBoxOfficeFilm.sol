@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "truffle/Assert.sol";
-import "../contracts/HeartBankToken.sol";
+import "../contracts/HeartBankCoin.sol";
 import "../contracts/BoxOffice.sol";
 
 contract TestBoxOfficeFilm {
@@ -11,7 +11,7 @@ contract TestBoxOfficeFilm {
     address film;
 
     function beforeEach() public {
-        HeartBankToken kiitos = new HeartBankToken();
+        HeartBankCoin kiitos = new HeartBankCoin();
         boxOffice = new BoxOffice(address(kiitos));
         Assert.isTrue(kiitos.addAdmin(address(boxOffice)), "should add admin");
         Assert.isTrue(boxOffice.makeFilm(now + 28 days, 1 finney, 1 ether, "title", "symbol", "logline", "ipfshash", "ipfshash"), "should make film");

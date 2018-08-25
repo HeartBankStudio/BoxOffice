@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Oracle = artifacts.require("BoxOfficeOracle");
+const Oracle = artifacts.require("Oracle");
 
 module.exports = async () => {
     const oracle = await Oracle.deployed();
