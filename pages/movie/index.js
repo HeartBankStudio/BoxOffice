@@ -17,7 +17,7 @@ class BoxOfficeMovie extends Component {
 
         const movie = await Movie.at(props.query.movie);
         const [ filmmaker, createdTime, salesEndDate, availableTickets, price, movieName, ticketSymbol, logline, poster, trailer ] = await movie.getFilmSummary();
-        const [ sales, fund, ticketsSold, availableSupply, ticketSupply ] = await movie.getFilmStats();
+        const [ sales, fund, audienceTotal, availableSupply, ticketSupply ] = await movie.getFilmStats();
         
         const account = await getAccount();
         const ticketBalance = await movie.balanceOf(account);
@@ -49,7 +49,7 @@ class BoxOfficeMovie extends Component {
                 salesEndDate: salesEndDate*1000,
                 price: [ price.toNumber(), await toDollars(price) ],
                 availableTickets: [availableTickets.toNumber(), makeShorter(availableTickets) ],
-                ticketsSold: [ ticketsSold.toNumber(), makeShorter(ticketsSold) ],
+                ticketsSold: [ ticketSupply - availableSupply, makeShorter(ticketSupply - availableSupply) ],
                 sales: [ sales.toNumber(), await toDollars(sales) ]
             }
         };

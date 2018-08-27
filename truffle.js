@@ -7,7 +7,7 @@ module.exports = {
     ganache: {
       host: HOST,
       port: CHAIN,
-      network_id: 100
+      network_id: "*"
       // gas: 8003877,
       // gasPrice: 2300000000
     },

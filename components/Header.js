@@ -37,7 +37,7 @@ class Header extends Component {
             return (
                 <Menu.Menu position="right">
                     <Link route={`/movie/${this.props.movie}/update`}><Menu.Item onClick={event => this.props.dimPage()}><Icon name="edit outline" /> Update Movie</Menu.Item></Link>
-                    <Menu.Item><WithdrawFund movie={this.props.movie} dimPage={this.props.dimPage} fund={this.props.fund} /></Menu.Item>
+                    <Menu.Item><WithdrawFund movie={this.props.movie} dimPage={this.props.dimPage} page={this.props.page} fund={this.props.fund} /></Menu.Item>
                     <Popup trigger={<Menu.Item><Icon name="ticket" /> {this.props.ticketSymbol} Tickets<Label color="purple" floating>{this.props.ticketBalance[1]}</Label></Menu.Item>} content={`You have ${this.props.ticketBalance[0]} ${this.props.ticketSymbol} tickets!`} />
                     <Popup trigger={<Menu.Item active><Icon color="grey" name="address book outline" fitted /></Menu.Item>} content={<span><strong>Your account address</strong>: {this.props.account}</span>} />
                 </Menu.Menu>
@@ -46,7 +46,7 @@ class Header extends Component {
             return (
                 <Menu.Menu position="right">
                     <Link route={`/movie/${this.props.movie}`}><Menu.Item onClick={event => this.props.dimPage()}><Icon name="arrow left" /> {this.props.movieName}</Menu.Item></Link>
-                    <Menu.Item><WithdrawFund movie={this.props.movie} dimPage={this.props.dimPage} fund={this.props.fund} /></Menu.Item>
+                    <Menu.Item><WithdrawFund movie={this.props.movie} dimPage={this.props.dimPage} page={this.props.page} fund={this.props.fund} /></Menu.Item>
                     <Popup trigger={<Menu.Item><Icon name="ticket" /> {this.props.ticketSymbol} Tickets<Label color="purple" floating>{this.props.ticketBalance[1]}</Label></Menu.Item>} content={`You have ${this.props.ticketBalance[0]} ${this.props.ticketSymbol} tickets!`} />
                     <Popup trigger={<Menu.Item active><Icon color="grey" name="address book outline" fitted /></Menu.Item>} content={<span><strong>Your account address</strong>: {this.props.account}</span>} />
                 </Menu.Menu>
@@ -71,8 +71,9 @@ class Header extends Component {
             const account = await getAccount();
             const kiitos = await Kiitos.deployed();
             await kiitos.airDrop({ from: account });
-            this.props.dimPage();
+            // this.props.dimPage();
             Router.replaceRoute(this.props.page === "studio" ? "/" : "/movie/make");
+            this.setState({ pending: false });
         } catch(error) {
             this.setState({ error: error.message });
         }
@@ -86,7 +87,7 @@ class Header extends Component {
             await movie.spendTicket({ from: account });
             // this.props.dimPage();
             // Router.replaceRoute(`/theater/${movie.address}`);
-            this.setState({ theater: true });
+            this.setState({ theater: true, pending: false });
         } catch(error) {
             this.setState({ error: error.message });
         }

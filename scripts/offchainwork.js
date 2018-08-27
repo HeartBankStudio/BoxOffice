@@ -22,6 +22,7 @@ const makeShorter = number => {
 }
 
 const toEther = wei => makeShorter(wei/10**18);
+const toFinney = wei => makeShorter(wei/10**15);
 
 const toDollars = async wei => {
     const oracle = await currentOracle;
@@ -30,4 +31,4 @@ const toDollars = async wei => {
 }
 
 export default makeShorter;
-export { toEther, toDollars, round, addCommas };
+export { toEther, toFinney, toDollars, round, addCommas };

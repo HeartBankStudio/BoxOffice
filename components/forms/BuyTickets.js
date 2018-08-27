@@ -21,7 +21,8 @@ class BuyTickets extends Component {
             const boxOffice = await BoxOffice.deployed();
             await boxOffice.buyTickets(this.props.movie, this.state.tickets, { from: account, value: this.state.tickets*this.props.price[0] });
             this.props.dimPage();
-            Router.replaceRoute(`/theater/${this.props.movie}`);
+            Router.pushRoute(`/theater/${this.props.movie}`);
+            // this.setState({ loading: false, open: false });
         } catch(error) {
             this.setState({ loading: false, error: error.message });
         }

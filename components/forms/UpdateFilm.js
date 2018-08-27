@@ -89,9 +89,10 @@ class UpdateFilm extends Component {
                 Router.pushRoute(`/movie/${movie.address}`);
             } else {
                 const boxOffice = await BoxOffice.deployed();
-                boxOffice.FilmCreated((err, res) => this.setState({ movie: res.args.movie }));
+                boxOffice.FilmCreated((err, res) => this.setState({ movie: res.args.movie })); // not useful because activated by Metamask's dry run
                 await boxOffice.makeFilm(salesEndDate, this.state.availableTickets, this.state.price*10**15, this.state.ticketSupply, this.state.movieName, this.state.ticketSymbol, this.state.logline, this.state.poster, this.state.trailer, {from: account});
-                Router.pushRoute(`/movie/${this.state.movie}`)
+                // Router.pushRoute(`/movie/${this.state.movie}`);
+                Router.pushRoute("/");
             }            
         } catch (error) {
             this.setState({ error: error.message, loading: false });

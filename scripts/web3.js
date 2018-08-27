@@ -17,7 +17,7 @@ if (typeof window !== "undefined") {
 }
 
 module.exports = {
-    clientProvider,
+    clientProvider: clientProvider || Web3.currentProvider,
     adminProvider,
     clientWeb3: clientProvider === null ? Web3 : new Web3(clientProvider),
     adminWeb3: new Web3(adminProvider),

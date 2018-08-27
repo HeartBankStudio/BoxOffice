@@ -15,21 +15,32 @@ class MakeFilm extends Component {
         const [listingFee, withdrawFee, feesCollected, feesDonated ] = await boxOffice.getBoxOfficeStats();
 
         let movieName = "";
-        let ticketBalance = 0;
+        let ticketSymbol = "";
+        const fund = [0, "0"];
+        const ticketBalance = [0, "0"];
         if (props.query.movie) {
             const movie = await Movie.at(props.query.movie);
             movieName = await movie.name();
-            ticketBalance = await movie.balanceOf(account);
+            ticketSymbol = await movie.symbol();
+            fund[0] = await movie.fund();
+            fund[0] = fund[0].toNumber();
+            fund[1] = await toDollars(fund[0]);
+            ticketBalance[0] = await movie.balanceOf(account);
+            ticketBalance[0] = ticketBalance[0].toNumber();
+            ticketBalance[1] = makeShorter(ticketBalance[0]);
         }
 
         return { 
             movie: props.query.movie,
             movieName,
+            fund,
             feesCollected: [ feesCollected.toNumber(), await toDollars(feesCollected) ], 
             wallet: { 
+                ticketSymbol,
                 account, 
                 kiitosBalance: [ kiitosBalance.toNumber(), makeShorter(kiitosBalance) ],
-                ticketBalance: [ ticketBalance.toNumber(), makeShorter(ticketBalance) ]
+                ticketBalance
+                
             }
         };
     }
@@ -43,7 +54,7 @@ class MakeFilm extends Component {
     render() {
         return (
             <Dimmer.Dimmable blurring={this.state.dimmed} dimmed>
-                <Layout page={this.props.movie ? "update" : "studio"} movie={this.props.movie} movieName={this.props.movieName} dimPage={this.dimPage} {...this.props.wallet} feesCollected={this.props.feesCollected}>
+                <Layout page={this.props.movie ? "update" : "studio"} movie={this.props.movie} movieName={this.props.movieName} dimPage={this.dimPage} {...this.props.wallet} fund={this.props.fund} feesCollected={this.props.feesCollected}>
                     <Dimmer active={this.state.dimmed} page>
                         <Loader size="massive" >Connecting to Ethereum</Loader>
                     </Dimmer>

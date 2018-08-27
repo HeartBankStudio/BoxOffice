@@ -20,23 +20,27 @@ let BoxOffice = contract(boxOffice);
 let Movie = contract(movie);
 let Registry = contract(registry);
 let Oracle = contract(oracle);
+let currentOracle;
 
-Kiitos.setProvider(provider);
-BoxOffice.setProvider(provider);
-Movie.setProvider(provider);
-Registry.setProvider(provider);
-Oracle.setProvider(provider);
+if (provider) {
+    Kiitos.setProvider(provider);
+    BoxOffice.setProvider(provider);
+    Movie.setProvider(provider);
+    Registry.setProvider(provider);
+    Oracle.setProvider(provider);
 
-Kiitos = fixTruffleContractCompatibilityIssue(Kiitos);
-BoxOffice = fixTruffleContractCompatibilityIssue(BoxOffice);
-Movie = fixTruffleContractCompatibilityIssue(Movie);
-Registry = fixTruffleContractCompatibilityIssue(Registry);
-Oracle = fixTruffleContractCompatibilityIssue(Oracle);
+    Kiitos = fixTruffleContractCompatibilityIssue(Kiitos);
+    BoxOffice = fixTruffleContractCompatibilityIssue(BoxOffice);
+    Movie = fixTruffleContractCompatibilityIssue(Movie);
+    Registry = fixTruffleContractCompatibilityIssue(Registry);
+    Oracle = fixTruffleContractCompatibilityIssue(Oracle);
 
-const currentOracle = Registry.deployed()
-    .then(registry => registry.currentOracle())
-    .then(oracle => Oracle.at(oracle));
+    currentOracle = Registry.deployed()
+        .then(registry => registry.currentOracle())
+        .then(oracle => Oracle.at(oracle));
+}
 
+// console.log(web3.eth.defaultAccount);
 export default () => web3.eth.getAccounts().then(accounts => accounts[0]);
 
 export { currentOracle, Kiitos, BoxOffice, Movie };

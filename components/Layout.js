@@ -16,6 +16,9 @@ class Layout extends Component {
     async componentDidMount() { // to fix: causes warning 
         if (typeof web3.currentProvider !== "undefined")
             this.setState({ network: await web3.eth.net.getNetworkType() });
+        else {
+            this.setState({ network: undefined });
+        }
     }
 
     render() {
@@ -25,6 +28,7 @@ class Layout extends Component {
                     <Container>
                         <Head>
                             <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
+                            <link rel="shortcut icon" href="/static/heartbank.png" type="image/x-icon" />
                         </Head>
                         <Message style={{ marginTop: "20px", textAlign: "center" }} color="orange" hidden={this.state.network === null || this.state.network === "private" || this.state.network === "rinkeby"}>
                             <p>Please <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">install Metamask</a> and connect to the <strong>Rinkeby network</strong>.</p>

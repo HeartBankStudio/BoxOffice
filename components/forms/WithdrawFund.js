@@ -23,8 +23,14 @@ class WithdrawFund extends Component {
             const account = await getAccount();
             const boxOffice = await BoxOffice.deployed();
             await boxOffice.withdrawFund(this.props.movie, recipient, amount*10**18, expense, {from: account});
-            this.props.dimPage();
-            Router.replaceRoute(`/movie/${this.props.movie}`);
+            if (this.props.page === "movie") {
+                Router.replaceRoute(`/movie/${this.props.movie}`);
+                this.setState({ loading: false, open: false });
+            } else {
+                this.props.dimPage();
+                Router.pushRoute(`/movie/${this.props.movie}`);
+            }
+            
         } catch(error) {
             this.setState({ error: error.message, loading: false });
         }        

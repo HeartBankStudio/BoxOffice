@@ -19,7 +19,7 @@ class HeartBankStudio extends Component {
         const [ listingFee, withdrawFee, feesCollected, feesDonated ] = await boxOffice.getBoxOfficeStats();
 
         return { 
-            films, 
+            films: films.reverse(), 
             feesCollected: [ feesCollected.toNumber(), await toDollars(feesCollected) ], 
             wallet: { 
                 account, 

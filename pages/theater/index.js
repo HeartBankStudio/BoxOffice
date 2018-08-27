@@ -6,6 +6,13 @@ import Layout from "../../components/Layout";
 import AudienceMembers from "../../components/contents/AudienceMembers";
 import makeShorter, { toDollars } from "../../scripts/offchainwork";
 
+const isAudienceMember = (account, members) => {
+    for (let member of members) {
+        if (member.toString() === account.toString()) return true;
+    }
+    return false;
+};
+
 class BoxOfficeTheater extends Component {
     static async getInitialProps(props) {
         const account = await getAccount();
@@ -15,7 +22,9 @@ class BoxOfficeTheater extends Component {
         const movie = await Movie.at(props.query.movie);
         const [ filmmaker, createdTime, salesEndDate, availableTickets, price, movieName, ticketSymbol, logline, poster, trailer ] = await movie.getFilmSummary();
         const members = await movie.getAudienceMembers();
-        const isMember = members.includes(account);
+        const isMember = isAudienceMember(account, members); // members.indexOf(account) > -1; // members.includes(account);
+
+        console.log(account, members, isMember);
 
         return {
             movie: props.query.movie, 

@@ -2764,12 +2764,20 @@
     "100": {
       "events": {},
       "links": {
-        "OracleLibrary": "0xd512c0cfc194c52080293199a537f88bf6d78f4b"
+        "OracleLibrary": "0x95522b40aa2b9dd8b396b3dd1af3d1f6942e9bca"
       },
-      "address": "0x45632576849f3af23aa3ec3dd2a5e8eef2f4aab3",
-      "transactionHash": "0xb495a8aebb596ba42a483d55aac47bae8a2d99464b4a577170b077206846d13b"
+      "address": "0xebeb5a4341e6e9bc04de49aa9e4614c90487418b",
+      "transactionHash": "0xb7067bece239daca91a9ccfbd6cc39abd11a1a0e9d8beb45efd4a167ff1d0b20"
+    },
+    "4447": {
+      "events": {},
+      "links": {
+        "OracleLibrary": "0xf12b5dd4ead5f743c6baa640b0216200e89b60da"
+      },
+      "address": "0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f",
+      "transactionHash": "0x084400bad91a67ffe605254c8f998a2657c5b66d0d4457d2385d37042728c844"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-26T23:49:22.353Z"
+  "updatedAt": "2018-08-27T15:19:14.844Z"
 }

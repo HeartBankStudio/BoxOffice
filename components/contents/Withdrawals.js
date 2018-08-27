@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Table, Button, Header } from "semantic-ui-react";
-import { toEther } from "../../scripts/offchainwork";
+import { toFinney } from "../../scripts/offchainwork";
 
 const returnDate = time => {
     const date = new Date(time);
@@ -16,7 +16,7 @@ const renderWithdrawals = (movie, withdrawals) =>
             <Table.Row key={index}>
                 <Table.Cell>{returnDate(withdrawal.date*1000)}</Table.Cell>
                 <Table.Cell>{withdrawal.recipient}</Table.Cell>
-                <Table.Cell title={withdrawal.amount}>{toEther(withdrawal.amount)}</Table.Cell>
+                <Table.Cell title={withdrawal.amount}>{toFinney(withdrawal.amount)}</Table.Cell>
                 <Table.Cell>{withdrawal.expense}</Table.Cell>
             </Table.Row>);
 
@@ -29,7 +29,7 @@ export default ({ movie, fund, withdrawals }) =>
                 <Table.Row>
                     <Table.HeaderCell>Date</Table.HeaderCell>
                     <Table.HeaderCell>Recipient</Table.HeaderCell>
-                    <Table.HeaderCell>Amount in Ether</Table.HeaderCell>
+                    <Table.HeaderCell>Amount in Finney</Table.HeaderCell>
                     <Table.HeaderCell>Description of Expense</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
