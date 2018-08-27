@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
-contract HeartBankToken is StandardToken {
+contract HeartBankCoin is StandardToken {
 
     string public constant name = "HeartBank";
     string public constant symbol = "Kiitos";

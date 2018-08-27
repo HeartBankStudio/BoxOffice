@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Modal, Form, Button, Message, Input, Icon } from "semantic-ui-react";
 import { Router } from "../../routes";
-import web3, { BoxOffice } from "../../scripts/contracts";
+import getAccount, { BoxOffice } from "../../scripts/contracts";
+import { round } from "../../scripts/offchainwork";
 
 class WithdrawFund extends Component {
     state = {
         recipient: "",
-        ether: "",
+        amount: "",
         expense: "",
         open: false,
         loading: false,
@@ -15,47 +16,43 @@ class WithdrawFund extends Component {
 
     onSubmit = async event => {
         event.preventDefault();
-
-        const { recipient, ether, expense } = this.state;
-
+        const { recipient, amount, expense } = this.state;
         this.setState({ loading: true, error: "" });
 
         try {
-            const accounts = await web3.eth.getAccounts();
+            const account = await getAccount();
             const boxOffice = await BoxOffice.deployed();
-
-            await boxOffice.withdrawFund(this.props.movie, recipient, web3.utils.toWei(ether, "ether"), expense, {from: accounts[0]});
-            this.setState({ open: false });
+            await boxOffice.withdrawFund(this.props.movie, recipient, amount*10**18, expense, {from: account});
+            this.props.dimPage();
             Router.replaceRoute(`/movie/${this.props.movie}`);
         } catch(error) {
-            this.setState({ error: error.message });
-        }
-
-        this.setState({ loading: false });
-        
+            this.setState({ error: error.message, loading: false });
+        }        
     };
 
     render() {
         return (
-            <Modal open={this.state.open} trigger={<Button icon labelPosition="left" color="green" onClick={event => this.setState({open: true})}><Icon name="dollar sign" />Withdraw Fund</Button>}>
-                <Modal.Header>Withdraw Fund!</Modal.Header>
+            <Modal closeIcon onClose={event => this.setState({ open: false })} open={this.state.open} trigger={<Button icon labelPosition="left" color="grey" onClick={event => this.setState({open: true})}><Icon name="dollar sign" />Withdraw Fund</Button>}>
+                <Modal.Header>Pay Expense</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <Form onSubmit={this.onSubmit} error={!!this.state.error}>
+                        <Form loading={this.state.loading} size="large">
                             <Form.Field>
                                 <label>Recipient:</label>
                                 <Input 
                                     value={this.state.recipient}
                                     onChange={event => this.setState({ recipient: event.target.value })}
+                                    placeholder="Recipient's Ethereum account address"
                                 />
                             </Form.Field>
                             <Form.Field>
                                 <label>Amount:</label>
                                 <Input 
-                                    value={this.state.ether}
-                                    onChange={event => this.setState({ ether: event.target.value })}
-                                    label="ether"
+                                    value={this.state.amount}
+                                    onChange={event => this.setState({ amount: event.target.value })}
+                                    label={`${round(this.props.fund[0]/10**18 - this.state.amount)} ether left`}
                                     labelPosition="right"
+                                    placeholder="Payment amount in ether"
                                 />
                             </Form.Field>
                             <Form.Field>
@@ -63,13 +60,18 @@ class WithdrawFund extends Component {
                                 <Input 
                                     value={this.state.expense}
                                     onChange={event => this.setState({ expense: event.target.value })}
+                                    placeholder="What's the reason?"
                                 />
                             </Form.Field>
-                            <Message error header="Oophs!" content={this.state.error} />
-                            <Button primary loading={this.state.loading}>Withdraw from Fund!</Button>
                         </Form>
                     </Modal.Description>
                 </Modal.Content>
+                <Modal.Actions>
+                    <Message error hidden={!this.state.error} header="All fields are required." content={this.state.error} />
+                    <Button size="large" onClick={this.onSubmit} color="teal" loading={this.state.loading} icon labelPosition="left">
+                        <Icon name="dollar" /> Send Payment
+                    </Button>
+                </Modal.Actions>
             </Modal>
         );
     }

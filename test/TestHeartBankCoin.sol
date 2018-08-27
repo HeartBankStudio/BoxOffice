@@ -35,6 +35,16 @@ contract TestHeartBankCoin {
         Assert.isTrue(kiitos.transferFrom(address(1), address(2), 0 wei), "should transfer on behalf");
     }
 
+    function testToggleAirDrop() public {
+        HeartBankCoin kiitos = new HeartBankCoin();
+        Assert.isTrue(kiitos.toggleAirDrop(), "should toggle state of airdrop");
+    }
+
+    function testAirDrop() public {
+        HeartBankCoin kiitos = HeartBankCoin(DeployedAddresses.HeartBankCoin());
+        Assert.isTrue(kiitos.airDrop(), "should give 100 kiitos to sender");
+    }
+
     function testTransferToAdmin() public {
         HeartBankCoin kiitos = new HeartBankCoin();
         Assert.isTrue(kiitos.addAdmin(address(this)), "should add new admin");

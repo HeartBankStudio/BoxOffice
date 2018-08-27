@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-contract BoxOfficeOracleStorage {
+contract OracleStorage {
     
     address public owner;
     mapping (address => bool) private admins;

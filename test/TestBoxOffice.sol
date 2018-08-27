@@ -16,6 +16,7 @@ contract TestBoxOffice {
         Assert.equal(boxOffice.admin(), msg.sender, "should store admin");
         Assert.equal(boxOffice.kiitos(), DeployedAddresses.HeartBankCoin(), "should store Kiitos address");
         Assert.equal(boxOffice.heartbank(), 0, "should store HeartBank's balance");
+        Assert.equal(boxOffice.charity(), 0, "should store fees collected for charity");
         Assert.equal(boxOffice.listingFee(), 2, "should store listing fee");
         Assert.equal(boxOffice.withdrawFee(), 1, "should store withdraw fee");
     }
@@ -34,13 +35,15 @@ contract TestBoxOffice {
         Assert.isTrue(boxOffice.updateFees(3, 2), "should update fees");
     }
 
-    function testDonateToCharity() public {
+    function testReturnExcessPayment() public {
         HeartBankCoin kiitos = new HeartBankCoin();
         boxOffice = new BoxOffice(address(kiitos));
 
         Assert.isTrue(address(boxOffice).call.value(1 finney)(0x0), "should trigger callback");
-        Assert.isTrue(boxOffice.donateToCharity(msg.sender, 1 finney, "return excess payment"), "should return excess payment");
+        Assert.isTrue(boxOffice.returnExcessPayment(msg.sender, 1 finney), "should return excess payment");
     }
+
+    function testGetBoxOfficeStats() public {}
 
     function testShutDownBoxOffice() public {
         HeartBankCoin kiitos = new HeartBankCoin();

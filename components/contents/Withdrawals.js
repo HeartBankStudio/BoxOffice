@@ -1,20 +1,28 @@
 import React from "react";
 import { Container, Table, Button, Header } from "semantic-ui-react";
-import web3 from "../../scripts/contracts";
+import { toEther } from "../../scripts/offchainwork";
+
+const returnDate = time => {
+    const date = new Date(time);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+}
 
 const renderWithdrawals = (movie, withdrawals) => 
     withdrawals.filter(withdrawal => withdrawal.movie === movie)
         .map((withdrawal, index) => 
             <Table.Row key={index}>
-                <Table.Cell>{index}</Table.Cell>
+                <Table.Cell>{returnDate(withdrawal.date*1000)}</Table.Cell>
                 <Table.Cell>{withdrawal.recipient}</Table.Cell>
-                <Table.Cell>{web3.utils.fromWei(withdrawal.amount.toString(), "ether")}</Table.Cell>
+                <Table.Cell title={withdrawal.amount}>{toEther(withdrawal.amount)}</Table.Cell>
                 <Table.Cell>{withdrawal.expense}</Table.Cell>
             </Table.Row>);
 
-export default ({movie, withdrawals}) => 
+export default ({ movie, fund, withdrawals }) => 
     <Container>
-        <Button content="Fund Balance" active label={{ content: "$34,234" }} labelPosition="right" floated="right" style={{ marginTop: "-10px" }} />
+        <Button content="Fund Balance" active title={fund[0]} label={{ content: fund[1] }} labelPosition="right" floated="right" style={{ marginTop: "-10px" }} />
         <Header>Withdrawal History</Header>
         <Table celled>
             <Table.Header>

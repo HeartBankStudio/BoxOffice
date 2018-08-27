@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-interface HeartBankTokenInterface {
+interface HeartBankCoinInterface {
 
     function transferToAdmin(address holder, uint kiitos) external returns (bool);
     

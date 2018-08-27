@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-import {BoxOfficeOracleLibrary as Library} from "./BoxOfficeOracleLibrary.sol";
+import {OracleLibrary as Library} from "./OracleLibrary.sol";
 
-contract BoxOfficeOracle {
+contract Oracle {
     
     using Library for address;
     

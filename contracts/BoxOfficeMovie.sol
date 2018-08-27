@@ -10,21 +10,21 @@ contract BoxOfficeMovie is StandardToken {
     
     address public boxOffice;
     address public filmmaker;
+    address[] public audienceMembers;
     
     uint public createdTime;
-    uint public salesEndTime;
+    uint public salesEndDate;
+    uint public availableTickets;
     uint public price;
     uint public sales;
     uint public fund;
     string public logline; 
     string public poster; 
     string public trailer;
-
-    mapping (address => bool) public isAudienceMember;
-    address[] public members;
     
     event FilmUpdated(
-        uint salesEndTime,
+        uint salesEndDate,
+        uint availableTickets,
         uint price,
         string movieName,
         string ticketSymbol,
@@ -54,7 +54,8 @@ contract BoxOfficeMovie is StandardToken {
 
     constructor(
         address _filmmaker,
-        uint _salesEndTime,
+        uint _salesEndDate,
+        uint _availableTickets,
         uint _price,
         uint _ticketSupply, 
         string _movieName, 
@@ -72,7 +73,8 @@ contract BoxOfficeMovie is StandardToken {
         sales = 0;
         fund = 0;
         
-        salesEndTime = _salesEndTime;
+        salesEndDate = _salesEndDate;
+        availableTickets = _availableTickets;
         price = _price;
         totalSupply_ = _ticketSupply;
         name = _movieName;
@@ -86,7 +88,8 @@ contract BoxOfficeMovie is StandardToken {
     }
     
     function updateFilm(
-        uint _salesEndTime,
+        uint _salesEndDate,
+        uint _availableTickets,
         uint _price,
         string _movieName,
         string _ticketSymbol,
@@ -98,7 +101,8 @@ contract BoxOfficeMovie is StandardToken {
         onlyFilmmaker
         returns (bool)
     {
-        if (_salesEndTime > now) salesEndTime = _salesEndTime;
+        if (_salesEndDate > now) salesEndDate = _salesEndDate;
+        if (_availableTickets <= totalSupply_) availableTickets = _availableTickets;
         if (_price > 0) price = _price;
         if (bytes(_movieName).length > 0) name = _movieName;
         if (bytes(_ticketSymbol).length > 0) symbol = _ticketSymbol;
@@ -107,7 +111,8 @@ contract BoxOfficeMovie is StandardToken {
         if (bytes(_trailer).length > 0) trailer = _trailer;
         
         emit FilmUpdated(
-            salesEndTime,
+            salesEndDate,
+            availableTickets,
             price,
             name,
             symbol,
@@ -118,18 +123,6 @@ contract BoxOfficeMovie is StandardToken {
         return true;
     } 
     
-    function buyTickets(address buyer, uint quantity) external onlyBoxOffice returns (bool) {
-        require(balances[filmmaker] >= quantity);
-        balances[filmmaker] = balances[filmmaker].sub(quantity);
-        balances[buyer] = balances[buyer].add(quantity);
-        
-        sales = sales.add(quantity.mul(price));
-        fund = fund.add(quantity.mul(price));
-        
-        emit Transfer(filmmaker, buyer, quantity);
-        return true;
-    }
-    
     function spendTicket() 
         public 
         onlyTicketHolder 
@@ -138,12 +131,23 @@ contract BoxOfficeMovie is StandardToken {
         require(balances[msg.sender] >= 1);
         balances[msg.sender] = balances[msg.sender].sub(1);
         balances[boxOffice] = balances[boxOffice].add(1);
-        
-        members.push(msg.sender);
-        isAudienceMember[msg.sender] = true;
-        
+        audienceMembers.push(msg.sender);
+
         emit TicketSpent(msg.sender);
         emit Transfer(msg.sender, boxOffice, 1);
+        return true;
+    }
+    
+    function buyTickets(address buyer, uint quantity) external onlyBoxOffice returns (bool) {
+        require(balances[filmmaker] >= quantity);
+        balances[filmmaker] = balances[filmmaker].sub(quantity);
+        balances[buyer] = balances[buyer].add(quantity);
+        
+        availableTickets = availableTickets.sub(quantity);
+        sales = sales.add(quantity.mul(price));
+        fund = fund.add(quantity.mul(price));
+        
+        emit Transfer(filmmaker, buyer, quantity);
         return true;
     }
     
@@ -153,8 +157,36 @@ contract BoxOfficeMovie is StandardToken {
         return true;
     }
     
+    function getFilmSummary() public view returns (
+        address _filmmaker,
+        uint _createdTime,
+        uint _salesEndDate,
+        uint _availableTickets,
+        uint _price,
+        string _movieName,
+        string _ticketSymbol,
+        string _logline,
+        string _poster,
+        string _trailer
+    ) {
+        _filmmaker = filmmaker;
+        _createdTime = createdTime;
+        _salesEndDate = salesEndDate;
+        _availableTickets = availableTickets;
+        _price = price;
+        _movieName = name;
+        _ticketSymbol = symbol;
+        _logline = logline;
+        _poster = poster;
+        _trailer = trailer;
+    }
+    
+    function getFilmStats() public view returns (uint, uint, uint, uint, uint) {
+        return (sales, fund, balanceOf(boxOffice), balanceOf(filmmaker), totalSupply_);
+    }
+    
     function getAudienceMembers() public view returns (address[]) {
-        return members;
+        return audienceMembers;
     }
 
 }

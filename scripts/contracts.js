@@ -37,5 +37,6 @@ const currentOracle = Registry.deployed()
     .then(registry => registry.currentOracle())
     .then(oracle => Oracle.at(oracle));
 
-export default web3;
+export default () => web3.eth.getAccounts().then(accounts => accounts[0]);
+
 export { currentOracle, Kiitos, BoxOffice, Movie };

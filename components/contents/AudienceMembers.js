@@ -12,6 +12,6 @@ const renderAudienceMembers = members =>
 export default ({ members }) =>
     <Segment padded raised piled>
         <List divided relaxed="very" horizontal link>
-            {renderAudienceMembers(members)}
+            {members.length > 0 ? renderAudienceMembers(members) : <List.Item>There's currently no audience members.</List.Item>}
         </List>
     </Segment>;
