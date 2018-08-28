@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Message, Icon, Label, Header, Segment, Image, Progress, Modal, Container } from "semantic-ui-react";
 import { Router } from "../../routes";
-import ipfs from "../../scripts/ipfs";
-import getAccount, { BoxOffice, Movie } from "../../scripts/contracts";
+import ipfs from "../../utils/ipfs";
+import getAccount, { BoxOffice, Movie } from "../../utils/contracts";
 
 class UpdateFilm extends Component {
 

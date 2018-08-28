@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Dimmer, Loader, Step, Icon } from "semantic-ui-react";
-import getAccount, { Kiitos, BoxOffice, Movie } from "../../scripts/contracts";
+import getAccount, { Kiitos, BoxOffice, Movie } from "../../utils/contracts";
 import Layout from "../../components/Layout";
 import UpdateFilm from "../../components/forms/UpdateFilm";
-import makeShorter, { toDollars } from "../../scripts/offchainwork";
+import makeShorter, { toDollars } from "../../utils/offchainwork";
 
 class MakeFilm extends Component {
     static async getInitialProps(props) {

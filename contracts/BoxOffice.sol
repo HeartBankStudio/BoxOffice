@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import {HeartBankCoinInterface as Kiitos} from "./HeartBankCoinInterface.sol";
 import {BoxOfficeMovie as Movie} from "./BoxOfficeMovie.sol";
 
+/** @title Box Office factory that creates ERC20 movie tickets */
 contract BoxOffice {
     
     using SafeMath for uint;
@@ -110,6 +111,9 @@ contract BoxOffice {
         _;
     }
     
+    /** @dev Instantiates a Box Office factory with initial values
+     * @param token Contract address of the HeartBank coin called Kiitos
+     */
     constructor(address token) public {
         kiitos = Kiitos(token);
         admin = msg.sender;
@@ -121,10 +125,23 @@ contract BoxOffice {
         withdrawFee = 1;
     }
     
+    /** @dev Catches payment mistakes for admin to refund */
     function() public payable {
         emit FallbackTriggered(now, msg.sender, msg.value);
     }
     
+    /** @dev Creates ERC20 token per movie 
+     * @param salesEndDate End date of ticket sales
+     * @param availableTickets Quantity of tickets available during sales period
+     * @param price Price of each ticket
+     * @param ticketSupply Total supply of tickets 
+     * @param movieName Title of movie
+     * @param ticketSymbol Token symbol of ticket
+     * @param logline Logline of movie
+     * @param poster IPFS hash of movie poster
+     * @param trailer YouTube id of video trailer
+     * @return Boolean for testing in solidity
+     */
     function makeFilm(
         uint salesEndDate,
         uint availableTickets,
@@ -169,6 +186,11 @@ contract BoxOffice {
         return true;
     }
     
+    /** @dev Purchases movie tickets
+     * @param movie Address of movie token
+     * @param quantity Number of tikcets to purchase
+     * @return Boolean for testing in solidity 
+     */
     function buyTickets(address movie, uint quantity) 
         public 
         payable
@@ -197,6 +219,13 @@ contract BoxOffice {
         return true;
     }
     
+    /** @dev Withdraws from fund to pay expense
+     * @param movie Address of movie token
+     * @param recipient Address of recipient to be paid
+     * @param amount Amount in wei to pay
+     * @param expense Description of expense
+     * @return Boolean for testing in solidity
+     */
     function withdrawFund(address movie, address recipient, uint amount, string expense) 
         public 
         stopInEmergency
@@ -214,10 +243,18 @@ contract BoxOffice {
         return true;
     }
     
+    /** @dev Returns array of movie token addresses
+     * @return Movie token addresses
+     */
     function getFilms() public view returns (address[]) {
         return films;
     }
     
+    /** @dev Lets admin update listing fee and withdraw fee
+     * @param listing Listing fee in Kiitos for creating a movie token
+     * @param withdraw Fee as percentage of amount for withdrawing from fund
+     * @return Boolean for testing in solidity
+     */
     function updateFees(uint listing, uint8 withdraw)
         public
         stopInEmergency
@@ -230,6 +267,11 @@ contract BoxOffice {
         return true;
     }
     
+    /** @dev Gives admin the ability to donate widthdraw fees to any charity
+     * @param recipient Address of charity
+     * @param amount Amount in wei to donate
+     * @return Boolean for testing in solidity
+     */
     function donateToCharity(address recipient, uint amount) public onlyAdmin returns (bool) {
         require(amount <= heartbank);
         heartbank = heartbank.sub(amount);
@@ -238,6 +280,11 @@ contract BoxOffice {
         return true;
     }
     
+    /** @dev Gives admin the ability to return payment in excess or mistake 
+     * @param recipient Address of recipient to refund
+     * @param amount Amount in wei to refund 
+     * @return Boolean for testing in solidity
+     */
     function returnExcessPayment(address recipient, uint amount) public onlyAdmin returns (bool) {
         require(amount <= address(this).balance);
         emit ExcessReturned(recipient, amount);
@@ -245,15 +292,26 @@ contract BoxOffice {
         return true;
     }
     
+    /** @dev Returns stats collected
+     * @return listingFee The listing fee
+     * @return withdrawFee The withdraw fee
+     * @return heartbank Balance of withdraw fees withdrawn for charity 
+     * @return charity Total withdraw fees collected
+     */
     function getBoxOfficeStats() public view returns (uint, uint, uint, uint) {
-        return (listingFee, withdrawFee, heartbank, charity);
+        return (listingFee, withdrawFee, heartbank, charity); 
     }
     
+    /** @dev Lets admin toggle the state of emergency 
+     * @return Boolean for testing in solidity
+     */
     function toggleEmergency() public onlyAdmin returns (bool) {
         emergency = !emergency;
         return true;
     }
     
+    /** @dev Lets admin destroy this contract and send excess balance to self
+     */
     function shutDownBoxOffice() public onlyInEmergency onlyAdmin {
         selfdestruct(admin);
     }

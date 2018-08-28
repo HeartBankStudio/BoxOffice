@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Divider, Modal, Button, Label, Icon, Grid } from "semantic-ui-react";
-import { clientWeb3 as web3 } from "../scripts/web3";
+import { clientWeb3 as web3 } from "../utils/web3";
 
 class Footer extends Component {
 

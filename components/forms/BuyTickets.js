@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Modal, Form, Input, Message, Button, Icon } from "semantic-ui-react";
 import { Router } from "../../routes";
-import getAccount, { BoxOffice } from "../../scripts/contracts";
-import { round } from "../../scripts/offchainwork";
+import getAccount, { BoxOffice } from "../../utils/contracts";
+import { round } from "../../utils/offchainwork";
 
 class BuyTickets extends Component {
     state = {

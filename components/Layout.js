@@ -3,7 +3,7 @@ import { Container, Sidebar, Menu, Icon, Message } from "semantic-ui-react";
 import Head from "next/head";
 import Header from "./Header";
 import Footer from "./Footer";
-import { clientWeb3 as web3 } from "../scripts/web3";
+import { clientWeb3 as web3 } from "../utils/web3";
 
 class Layout extends Component {
     state = {

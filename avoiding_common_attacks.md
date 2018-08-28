@@ -1,0 +1,1 @@
+https://medium.com/heartbankstudio/smart-contract-security-vulnerabilities-1690f459b148

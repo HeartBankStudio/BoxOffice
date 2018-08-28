@@ -1,5 +1,5 @@
 const { HOST, CHAIN } = require("./config");
-const { adminProvider } = require("./scripts/web3");
+const { adminProvider } = require("./utils/web3");
 
 module.exports = {
   migrations_directory: "./migrations",

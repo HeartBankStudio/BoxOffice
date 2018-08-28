@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Progress, Grid, Button, Icon, Dimmer, Loader } from "semantic-ui-react";
-import getAccount, { BoxOffice, Movie } from "../../scripts/contracts";
+import getAccount, { BoxOffice, Movie } from "../../utils/contracts";
 import { Link } from "../../routes";
 import Layout from "../../components/Layout";
 import MovieDetails from "../../components/contents/MovieDetails";
@@ -8,7 +8,7 @@ import MovieStats from "../../components/contents/MovieStats";
 import TokenDetails from "../../components/contents/TokenDetails";
 import BuyTickets from "../../components/forms/BuyTickets";
 import Withdrawals from "../../components/contents/Withdrawals";
-import makeShorter, { toDollars } from "../../scripts/offchainwork";
+import makeShorter, { toDollars } from "../../utils/offchainwork";
 
 class BoxOfficeMovie extends Component {
     static async getInitialProps(props) {

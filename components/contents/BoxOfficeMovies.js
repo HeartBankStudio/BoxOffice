@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Card, Icon, Header, Label, Button } from "semantic-ui-react";
 import { Link } from "../../routes";
-import makeShorter from "../../scripts/offchainwork";
+import makeShorter from "../../utils/offchainwork";
     
 const renderFilms = (films, dimPage) => 
      films.map((address, index) => 

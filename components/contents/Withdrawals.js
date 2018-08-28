@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Table, Button, Header } from "semantic-ui-react";
-import { toFinney } from "../../scripts/offchainwork";
+import { toFinney } from "../../utils/offchainwork";
 
 const returnDate = time => {
     const date = new Date(time);

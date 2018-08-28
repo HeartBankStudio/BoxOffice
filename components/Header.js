@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Menu, Icon, Popup, Modal, Embed, Label } from "semantic-ui-react";
 import { Link, Router } from "../routes";
-import getAccount, { Kiitos, Movie } from "../scripts/contracts";
+import getAccount, { Kiitos, Movie } from "../utils/contracts";
 import WithdrawFund from "../components/forms/WithdrawFund";
 
 class Header extends Component {

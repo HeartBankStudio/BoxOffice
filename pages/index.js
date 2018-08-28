@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Button, Grid, Icon, Sticky, Dimmer, Loader } from "semantic-ui-react";
-import getAccount, { Kiitos, BoxOffice } from "../scripts/contracts";
+import getAccount, { Kiitos, BoxOffice } from "../utils/contracts";
 import { Link } from "../routes";
 import Layout from "../components/Layout";
 import BoxOfficeMovies from "../components/contents/BoxOfficeMovies";
 import BoxOfficeStats from "../components/contents/BoxOfficeStats";
-import makeShorter, { toDollars } from "../scripts/offchainwork";
+import makeShorter, { toDollars } from "../utils/offchainwork";
 
 class HeartBankStudio extends Component {
     static async getInitialProps() {

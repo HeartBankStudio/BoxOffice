@@ -1,0 +1,1 @@
+https://medium.com/heartbankstudio/smart-contract-design-patterns-788e50e3118f

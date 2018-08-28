@@ -44,7 +44,7 @@ contract('BoxOffice Movie', accounts => {
     const [filmmaker, createdTime, salesEndDate, availableTickets, price, movieName, ticketSymbol, logline, poster, trailer] = await movie.getFilmSummary();
     
     assert.equal(filmmaker, owner);
-    assert.isBelow(createdTime, Date.now()/1000);
+    assert.isBelow(createdTime.toNumber(), Date.now()/1000);
     // assert.equal(salesEndDate, SALES_END_DATE);
     assert.equal(availableTickets, web3.toWei(1, "szabo"));
     assert.equal(price, web3.toWei(1, "finney"));

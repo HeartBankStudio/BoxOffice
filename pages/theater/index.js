@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Container, Embed, List, Label, Breadcrumb, Dimmer, Loader, Message } from "semantic-ui-react";
-import getAccount, { BoxOffice, Movie } from "../../scripts/contracts";
+import getAccount, { BoxOffice, Movie } from "../../utils/contracts";
 import { Link } from "../../routes";
 import Layout from "../../components/Layout";
 import AudienceMembers from "../../components/contents/AudienceMembers";
-import makeShorter, { toDollars } from "../../scripts/offchainwork";
+import makeShorter, { toDollars } from "../../utils/offchainwork";
 
 const isAudienceMember = (account, members) => {
     for (let member of members) {

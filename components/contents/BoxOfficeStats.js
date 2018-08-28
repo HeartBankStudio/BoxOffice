@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Statistic, List, Segment } from "semantic-ui-react";
-import makeShorter, { toDollars } from "../../scripts/offchainwork";
+import makeShorter, { toDollars } from "../../utils/offchainwork";
 
 class BoxOfficeStats extends Component {
 

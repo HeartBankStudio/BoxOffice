@@ -2769,15 +2769,15 @@
       "address": "0xa8bbbe439fa8cabe6a163d014e0e29c7697024c3",
       "transactionHash": "0xb9b9dc01fa4af73f58475deb2d0bddafd674b6b224eec8f3d734e82d2dbad0ae"
     },
-    "5777": {
+    "4447": {
       "events": {},
       "links": {
-        "OracleLibrary": "0x95522b40aa2b9dd8b396b3dd1af3d1f6942e9bca"
+        "OracleLibrary": "0xf12b5dd4ead5f743c6baa640b0216200e89b60da"
       },
-      "address": "0xebeb5a4341e6e9bc04de49aa9e4614c90487418b",
-      "transactionHash": "0xb7067bece239daca91a9ccfbd6cc39abd11a1a0e9d8beb45efd4a167ff1d0b20"
+      "address": "0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f",
+      "transactionHash": "0x084400bad91a67ffe605254c8f998a2657c5b66d0d4457d2385d37042728c844"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-27T16:41:00.133Z"
+  "updatedAt": "2018-08-28T03:52:28.822Z"
 }
