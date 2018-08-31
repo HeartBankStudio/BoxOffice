@@ -76,7 +76,7 @@ contract('BoxOffice', accounts => {
     assert.equal(await web3.eth.getBalance(boxOffice.address), 0);
   });
 
-  it("should receive plain ether transfer and trigger callback", async () => {
+  it("should receive plain ether transfer and trigger fallback", async () => {
     boxOffice.FallbackTriggered((err, res) => {
       const {date, sender, value} = res.args;
 
