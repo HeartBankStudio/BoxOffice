@@ -3,6 +3,7 @@ import { Modal, Form, Input, Message, Button, Icon } from "semantic-ui-react";
 import { Router } from "../../routes";
 import getAccount, { BoxOffice } from "../../utils/contracts";
 import { round } from "../../utils/offchainwork";
+import * as gtag from "../../utils/analytics";
 
 class BuyTickets extends Component {
     state = {
@@ -15,6 +16,13 @@ class BuyTickets extends Component {
     onSubmit = async event => {
         event.preventDefault();
         this.setState({ loading: true, error: "" });
+
+        gtag.event({
+            action: "buyTickets",
+            category: "Movie",
+            label: this.props.movie,
+            value: this.state.tickets
+        });
 
         try {
             const account = await getAccount();

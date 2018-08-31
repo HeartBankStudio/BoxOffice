@@ -3,6 +3,7 @@ import { Form, Input, Button, Message, Icon, Label, Header, Segment, Image, Prog
 import { Router } from "../../routes";
 import ipfs from "../../utils/ipfs";
 import getAccount, { BoxOffice, Movie } from "../../utils/contracts";
+import * as gtag from "../../utils/analytics";
 
 class UpdateFilm extends Component {
 
@@ -78,6 +79,13 @@ class UpdateFilm extends Component {
     submitToBoxOffice = async event => {
         event.preventDefault();
         this.setState({ loading: true, error: "" });
+
+        gtag.event({
+            action: "makeFilm",
+            category: "BoxOffice",
+            label: this.props.movie,
+            value: this.state.movieName
+        });
 
         try {
             const account = await getAccount();

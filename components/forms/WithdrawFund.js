@@ -3,6 +3,7 @@ import { Modal, Form, Button, Message, Input, Icon } from "semantic-ui-react";
 import { Router } from "../../routes";
 import getAccount, { BoxOffice } from "../../utils/contracts";
 import { round } from "../../utils/offchainwork";
+import * as gtag from "../../utils/analytics";
 
 class WithdrawFund extends Component {
     state = {
@@ -18,6 +19,13 @@ class WithdrawFund extends Component {
         event.preventDefault();
         const { recipient, amount, expense } = this.state;
         this.setState({ loading: true, error: "" });
+
+        gtag.event({
+            action: "withdrawFund",
+            category: "Movie",
+            label: this.props.movie,
+            value: amount
+        });
 
         try {
             const account = await getAccount();
