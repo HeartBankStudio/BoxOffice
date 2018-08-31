@@ -41,6 +41,6 @@ if (provider) {
 }
 
 // console.log(web3.eth.defaultAccount);
-export default () => web3.eth.getAccounts().then(accounts => accounts[0]);
+export default () => web3.eth.getAccounts().then(accounts => accounts[0] ? accounts[0] : 0x0);
 
 export { currentOracle, Kiitos, BoxOffice, Movie };

@@ -31,6 +31,7 @@
     "oracle": "truffle exec scripts/oracle.js --network ganache",
     "oracle-rinkeby": "truffle exec scripts/oracle.js --network rinkeby",
     "dev": "node server.js",
+    "prod": "next build && NODE_ENV=production node server.js",
     "test": "jest scripts/test.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",

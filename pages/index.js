@@ -23,7 +23,7 @@ class HeartBankStudio extends Component {
             feesCollected: [ feesCollected.toNumber(), await toDollars(feesCollected) ], 
             wallet: { 
                 account, 
-                kiitosBalance:[ kiitosBalance.toNumber(), makeShorter(kiitosBalance) ]
+                kiitosBalance: [ kiitosBalance.toNumber(), makeShorter(kiitosBalance) ]
             }, 
             stats: { 
                 listingFee: [ listingFee.toNumber(), makeShorter(listingFee) ], 
