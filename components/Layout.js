@@ -6,7 +6,6 @@ import Footer from "./Footer";
 import { clientWeb3 as web3 } from "../utils/web3";
 import { GA_TRACKING_ID, pageview } from "../utils/analytics";
 
-
 class Layout extends Component {
     state = {
         network: null,
@@ -15,14 +14,9 @@ class Layout extends Component {
 
     toggleSidebar = () => this.setState({ visible: !this.state.visible });
 
-    async componentDidMount() { // to fix: causes warning 
-        pageview(document.location.pathnamel);
-
-        if (typeof web3.currentProvider !== "undefined")
-            this.setState({ network: await web3.eth.net.getNetworkType() });
-        else {
-            this.setState({ network: undefined });
-        }
+    async componentDidMount() { 
+        pageview(document.location.pathname);
+        this.setState({ network: await web3.eth.net.getNetworkType() });
     }
 
     render() {

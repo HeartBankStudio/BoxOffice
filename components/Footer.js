@@ -9,8 +9,7 @@ class Footer extends Component {
     };
 
     async componentDidMountX() { 
-        if (typeof web3.currentProvider !== "undefined")
-            this.setState({ network: await web3.eth.net.getNetworkType() });
+        this.setState({ network: await web3.eth.net.getNetworkType() });
     }
 
     render() {
