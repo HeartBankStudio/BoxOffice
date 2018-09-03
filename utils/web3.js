@@ -1,10 +1,10 @@
 const Web3 = require("web3");
 const HDWalletProvider = require("truffle-hdwallet-provider");
-const { HOST, NETWORK, MNEMONIC, INFURA } = require("../config");
+const { HOST, PORT, MNEMONIC, INFURA } = require("../config");
 
 let clientProvider;
 const adminProvider = new HDWalletProvider(MNEMONIC, INFURA);
-const endpoint = process.env.NODE_ENV === "production" ? INFURA : `http://${HOST}:${NETWORK}`;
+const endpoint = process.env.NODE_ENV === "production" ? INFURA : `http://${HOST}:${PORT}`;
 
 if (typeof window !== "undefined") { // browser
     if (typeof window.web3 !== "undefined") { // has metamask

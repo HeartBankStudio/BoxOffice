@@ -1,4 +1,4 @@
-const { HOST, NETWORK } = require("./config");
+const { HOST, PORT } = require("./config");
 const { adminProvider } = require("./utils/web3");
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
   networks: {
     ganache: {
       host: HOST,
-      port: NETWORK,
+      port: PORT,
       network_id: "*"
       // gas: 8003877,
       // gasPrice: 2300000000

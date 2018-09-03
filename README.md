@@ -6,7 +6,7 @@ https://medium.com/heartbankstudio/an-ethereum-dapp-to-decentralize-the-film-ind
 
 ## Rinkeby Testnet
 
-The alpha release is available at the URL [boxoffice.heartbank.studio](https://boxoffice.heartbank.studio). The underlying smart contracts reside on the Rinkeby Testnet and can be viewed on Etherscan. 
+This alpha release is available at the URL [boxoffice.heartbank.studio](https://boxoffice.heartbank.studio). The underlying smart contracts reside on the Rinkeby Testnet and can be viewed on Etherscan. 
 
 ### Deployed Contracts
 
@@ -19,7 +19,7 @@ The alpha release is available at the URL [boxoffice.heartbank.studio](https://b
 
 ## Main Pages
 
-There are four main pages, each mapped to corresponding routes for easy bookmarking and search engine optimization. Below are explanations at a high level.
+There are four main pages, each mapped to corresponding URL routes for easy bookmarking and search engine optimization. Below are explanations at a high level.
 
 ### Studio Home Page
 
@@ -51,7 +51,7 @@ Follow these steps to install this project onto your local machine.
 
 ### Setup Project
 
-Fork this repo. Then:
+**Fork this repo**. Then:
 
 1. Clone your forked repo: 
 
@@ -120,7 +120,7 @@ To interact with the contracts through the frontend, install the [Chrome Metamas
 1. Start up local server: 
 
 ```
-npm run dev
+$ npm run dev
 ```
 
 2. Visit localhost: 
@@ -129,7 +129,7 @@ npm run dev
 http://localhost:3000
 ```
 
-For convenience, the `/scripts/oracle.js` script can be used to mimic the functionality of an oracle. To tell the `Oracle` contract to emit an event that updates its `price` of ether in USD to the one currently at Coinbase, execute:
+For convenience, the `/scripts/oracle.js` script can be used to mimic the functionality of an oracle service. To tell the `Oracle` contract to emit an event that updates its `price` of ether in USD to the one currently at [Coinbase](https://www.coinbase.com/charts?locale=en-US), execute:
 
 ```
 $ npm run oracle
