@@ -4,7 +4,7 @@ import Head from "next/head";
 import Header from "./Header";
 import Footer from "./Footer";
 import { clientWeb3 as web3 } from "../utils/web3";
-import { GA_TRACKING_ID, pageview } from "../utils/analytics";
+import { GA_TRACKING_ID } from "../utils/analytics";
 
 class Layout extends Component {
     state = {
@@ -15,7 +15,6 @@ class Layout extends Component {
     toggleSidebar = () => this.setState({ visible: !this.state.visible });
 
     async componentDidMount() { 
-        pageview(document.location.pathname);
         this.setState({ network: await web3.eth.net.getNetworkType() });
     }
 

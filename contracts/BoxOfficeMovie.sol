@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
+/** @title A Box Office Movie that inherits ERC20 */
 contract BoxOfficeMovie is StandardToken {
 
     uint8 public constant decimals = 0;
@@ -52,6 +53,18 @@ contract BoxOfficeMovie is StandardToken {
         _;
     }
 
+    /** @dev Instantiates a ERC20 token per movie 
+     * @param _filmmaker Address of filmmaker 
+     * @param _salesEndDate End date of ticket sales
+     * @param _availableTickets Quantity of tickets available during sales period
+     * @param _price Price of each ticket
+     * @param _ticketSupply Total supply of tickets 
+     * @param _movieName Title of movie
+     * @param _ticketSymbol Token symbol of ticket
+     * @param _logline Logline of movie
+     * @param _poster IPFS hash of movie poster
+     * @param _trailer YouTube id of video trailer
+     */
     constructor(
         address _filmmaker,
         uint _salesEndDate,
@@ -87,6 +100,17 @@ contract BoxOfficeMovie is StandardToken {
         allowed[filmmaker][boxOffice] = totalSupply_;
     }
     
+    /** @dev Updates movie and token details
+     * @param _salesEndDate End date of ticket sales
+     * @param _availableTickets Quantity of tickets available during sales period
+     * @param _price Price of each ticket
+     * @param _movieName Title of movie
+     * @param _ticketSymbol Token symbol of ticket
+     * @param _logline Logline of movie
+     * @param _poster IPFS hash of movie poster
+     * @param _trailer YouTube id of video trailer
+     * @return Boolean for testing in solidity
+     */
     function updateFilm(
         uint _salesEndDate,
         uint _availableTickets,
@@ -123,6 +147,9 @@ contract BoxOfficeMovie is StandardToken {
         return true;
     } 
     
+    /** @dev Spends a movie ticket 
+     * @return Boolean for testing in solidity
+     */
     function spendTicket() 
         public 
         onlyTicketHolder 
@@ -138,6 +165,11 @@ contract BoxOfficeMovie is StandardToken {
         return true;
     }
     
+    /** @dev Purchases movie tickets
+     * @param buyer Address of buyer
+     * @param quantity Number of tikcets to purchase
+     * @return Boolean for testing in solidity 
+     */
     function buyTickets(address buyer, uint quantity) external onlyBoxOffice returns (bool) {
         require(balances[filmmaker] >= quantity);
         balances[filmmaker] = balances[filmmaker].sub(quantity);
@@ -151,12 +183,27 @@ contract BoxOfficeMovie is StandardToken {
         return true;
     }
     
+    /** @dev Withdraws from fund to pay expense
+     * @param amount Amount in wei to pay
+     * @return Boolean for testing in solidity
+     */
     function withdrawFund(uint amount) external onlyBoxOffice returns (bool) {
         require(fund >= amount);
         fund = fund.sub(amount);
         return true;
     }
     
+    /** @dev Retrieves movie and token details 
+     * @return _filmmaker Address of filmmaker 
+     * @return _salesEndDate End date of ticket sales
+     * @return _availableTickets Quantity of tickets available during sales period
+     * @return _price Price of each ticket
+     * @return _movieName Title of movie
+     * @return _ticketSymbol Token symbol of ticket
+     * @return _logline Logline of movie
+     * @return _poster IPFS hash of movie poster
+     * @return _trailer YouTube id of video trailer
+     */
     function getFilmSummary() public view returns (
         address _filmmaker,
         uint _createdTime,
@@ -181,10 +228,20 @@ contract BoxOfficeMovie is StandardToken {
         _trailer = trailer;
     }
     
+    /** @dev Retrieves movie statistics 
+     * @return Total ticket sales
+     * @return Balance from ticket sales and withdrawals
+     * @return Total tickets spent
+     * @return Total tickets available 
+     * @return Total supply of tickets  
+     */
     function getFilmStats() public view returns (uint, uint, uint, uint, uint) {
         return (sales, fund, balanceOf(boxOffice), balanceOf(filmmaker), totalSupply_);
     }
     
+    /** @dev Retrieves audience members 
+     * @return Addresses of audience members
+     */
     function getAudienceMembers() public view returns (address[]) {
         return audienceMembers;
     }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Divider, Modal, Button, Label, Icon, Grid } from "semantic-ui-react";
 import { clientWeb3 as web3 } from "../utils/web3";
+import * as gtag from "../utils/analytics";
 
 class Footer extends Component {
 
@@ -8,8 +9,9 @@ class Footer extends Component {
         network: "rinkeby"
     };
 
-    async componentDidMountX() { 
-        this.setState({ network: await web3.eth.net.getNetworkType() });
+    async componentDidMount() { 
+        // this.setState({ network: await web3.eth.net.getNetworkType() });
+        gtag.pageview(document.location.pathname);
     }
 
     render() {

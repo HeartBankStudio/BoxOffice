@@ -83,7 +83,7 @@ class BoxOfficeMovie extends Component {
                                 <MovieStats {...this.props.stats} />
                                 <Button.Group fluid style={{ marginTop: "30px"}}>
                                     <BuyTickets dimPage={this.dimPage} movie={this.props.movie} {...this.props.film} {...this.props.token} {...this.props.stats} />
-                                    <Link route={`/theater/${this.props.movie}`}><Button onClick={event => this.dimPage()} color="teal" icon labelPosition="left"><Icon name="image" />Watch Movie</Button></Link>
+                                    <Link route={`/theater/${this.props.movie}`}><Button onClick={event => this.dimPage()} color="teal" icon labelPosition="left"><Icon name="image" />Watch Trailer</Button></Link>
                                 </Button.Group>
                                 <TokenDetails {...this.props.token} />
                                 <Progress color="yellow" title={`${this.props.stats.ticketsSold[0]/this.props.token.ticketSupply[0]*100}%`} percent={this.props.stats.ticketsSold[0]/this.props.token.ticketSupply[0]*100|0} progress />
